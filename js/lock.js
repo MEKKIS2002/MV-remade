@@ -30,17 +30,17 @@ function applyRoleMode(){
   if(badge) badge.style.display = isViewer ? 'none' : '';
 
   if(isViewer){
-    // Viewer: beats + mixtapes only, no lyrics, no albums, no admin actions
-    document.querySelectorAll('.tab-btn').forEach(b=>{
-      const tab = b.dataset.tab;
-      b.style.display = (tab === 'beats' || tab === 'mixtapes') ? '' : 'none';
+    // Viewer: beats + mixtapes only via sidebar
+    document.querySelectorAll('.mv-nav-btn').forEach(b=>{
+      const p = b.dataset.page;
+      b.style.display = (p === 'beats' || p === 'mixtapes') ? '' : 'none';
     });
-    // Show mixtapes as default tab
-    document.querySelectorAll('.tab-view').forEach(v=>v.classList.add('hidden'));
-    const mix = document.getElementById('mixtapesTab');
-    if(mix){ mix.classList.remove('hidden'); }
-    // Activate mixtapes tab button
-    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab==='mixtapes'));
+    if(typeof window.navigateTo === 'function') window.navigateTo('mixtapes');
+    else {
+      document.querySelectorAll('.tab-view').forEach(v=>v.classList.add('hidden'));
+      const mix = document.getElementById('mixtapesTab');
+      if(mix){ mix.classList.remove('hidden'); mix.classList.add('tab-visible'); }
+    }
   } else if(isProducer){
     const active=document.querySelector('.tab-btn.active');
     const activeTab=active?.dataset?.tab||'mixtapes';
