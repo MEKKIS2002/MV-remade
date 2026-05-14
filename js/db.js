@@ -1140,53 +1140,13 @@ document.getElementById("importInput").addEventListener("change",e=>{const f=e.t
 
 // ── TABS ──
 // Tab switching: preserve scroll position (double-rAF wins over any render() scroll)
+// Old .tab-btn click handler replaced by nav.js sidebar system.
+// navigateTo(pageId) is the single entrypoint for all page switches.
+// This stub kept for backwards compatibility if any code calls .tab-btn click.
 document.querySelectorAll(".tab-btn").forEach(btn=>btn.addEventListener("click",()=>{
-  if(isProducerUser()&&!["mixtapes","pipeline"].includes(btn.dataset.tab)){showToast("Produsentmodus har tilgang til mixtapes og pipeline");return;}
-  const y=window.scrollY||document.documentElement.scrollTop||0;
-  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");
-
-  // Archive tab is rendered dynamically by archive.js — handle separately
-  if(btn.dataset.tab === 'archive'){
-    const current = document.querySelector(".tab-view:not(.hidden)");
-    if(current){ current.classList.remove("tab-visible"); current.classList.add("hidden"); }
-    if(typeof window.renderArchiveView === 'function'){
-      window.renderArchiveView(); // archive.js creates #archiveTab and shows it
-    } else if(typeof window.openArchiveTab === 'function'){
-      window.openArchiveTab();
-    }
-    // archive.js sets style.display='block', but our CSS has opacity:0 on .tab-view by default
-    // We must add tab-visible so opacity transitions to 1
-    requestAnimationFrame(()=>{
-      const archTab = document.getElementById('archiveTab');
-      if(archTab){
-        archTab.classList.remove('tab-visible'); // force reflow
-        requestAnimationFrame(()=>archTab.classList.add('tab-visible'));
-      }
-    });
-    applyRoleMode();
-    requestAnimationFrame(()=>requestAnimationFrame(()=>window.scrollTo(0,y)));
-    return;
+  if(typeof window.navigateTo === 'function'){
+    window.navigateTo(btn.dataset.tab || btn.dataset.page);
   }
-
-  // Fade out current, then switch and fade in new tab
-  const current = document.querySelector(".tab-view:not(.hidden)");
-  const next = document.getElementById(`${btn.dataset.tab}Tab`);
-  if(!next) return;
-
-  if(current && current !== next){
-    current.classList.remove("tab-visible");  // reset opacity before hiding
-    current.classList.add("hidden");
-  }
-  next.classList.remove("hidden");
-  next.classList.remove("tab-visible");   // ensure we start at opacity:0
-  // Trigger reflow then fade in
-  requestAnimationFrame(()=>{ next.classList.add("tab-visible"); });
-
-  // Only render the newly active tab — never re-render already-visible content
-  renderActiveTab(btn.dataset.tab);
-  applyRoleMode();
-  requestAnimationFrame(()=>requestAnimationFrame(()=>window.scrollTo(0,y)));
 }));
 
 // ── CLOSE MODALS ON BACKDROP ──
@@ -1460,8 +1420,11 @@ document.getElementById('deleteConfirmInput').addEventListener('input',function(
 });
 document.getElementById('deleteConfirmModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal('deleteConfirmModal');});
 
-renderAll();
-// Add tab-visible class to initial active tab (no transition needed on first load)
-requestAnimationFrame(()=>{
-  document.querySelectorAll('.tab-view:not(.hidden)').forEach(v=>v.classList.add('tab-visible'));
-});
+// Register render functions with nav.js (after all functions are defined)
+if(typeof window.registerPage === 'function'){
+  registerPage('mixtapes',     renderMixtapes);
+  registerPage('albums',       renderAlbums);
+  registerPage('pipeline',     renderPipeline);
+  registerPage('integrations', renderIntegrations);
+}
+renderStats(); // always render stats immediately
