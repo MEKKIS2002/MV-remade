@@ -47,11 +47,11 @@ AKTIVE BRUKERE:
 -->
 
   <!-- Stylesheets -->
-  <link rel="stylesheet" href="css/main.css?v=202605141253">
-  <link rel="stylesheet" href="css/ui.css?v=202605141253">
-  <link rel="stylesheet" href="css/track-cards.css?v=202605141253">
-  <link rel="stylesheet" href="css/archive.css?v=202605141253">
-  <link rel="stylesheet" href="css/mixtape.css?v=202605141253">
+  <link rel="stylesheet" href="css/main.css?v=202605141357">
+  <link rel="stylesheet" href="css/ui.css?v=202605141357">
+  <link rel="stylesheet" href="css/track-cards.css?v=202605141357">
+  <link rel="stylesheet" href="css/archive.css?v=202605141357">
+  <link rel="stylesheet" href="css/mixtape.css?v=202605141357">
 </head>
 <body>
 <!-- Viewer mode login shortcut -->
@@ -133,14 +133,34 @@ AKTIVE BRUKERE:
   </aside>
 </section>
 
-<nav class="tabs">
-  <button class="tab-btn" data-tab="beats">🎵 Beats</button>
-  <button class="tab-btn active" data-tab="mixtapes">📼 Mixtapes</button>
-  <button class="tab-btn" data-tab="albums">📁 Albumer</button>
-  <button class="tab-btn" data-tab="pipeline">📊 Pipeline</button>
-  <button class="tab-btn" data-tab="archive">🗄️ Arkivert</button>
-  <button class="tab-btn" data-tab="integrations">🔌 Integrasjoner</button>
-</nav>
+<div class="mv-app-shell">
+  <!-- SIDEBAR -->
+  <nav class="mv-sidebar" id="mvSidebar">
+    <div class="mv-sidebar-section">
+      <div class="mv-nav-label">Oversikt</div>
+      <button class="mv-nav-btn" data-page="overview">🏠 Oversikt</button>
+    </div>
+    <div class="mv-sidebar-section">
+      <div class="mv-nav-label">Musikk</div>
+      <button class="mv-nav-btn" data-page="mixtapes">📼 Mixtapes</button>
+      <button class="mv-nav-btn" data-page="albums">📁 Albumer</button>
+      <button class="mv-nav-btn" data-page="beats">🎵 Beats</button>
+      <button class="mv-nav-btn" data-page="pipeline">📊 Prosjektflyt</button>
+      <button class="mv-nav-btn" data-page="archive">🗄️ Arkiv</button>
+    </div>
+    <div class="mv-sidebar-section">
+      <div class="mv-nav-label">Kreativt</div>
+      <button class="mv-nav-btn" data-page="lyriclab">✍️ Lyric Lab</button>
+      <button class="mv-nav-btn" data-page="ideabank">💡 Idébank</button>
+    </div>
+    <div class="mv-sidebar-section mv-sidebar-bottom">
+      <button class="mv-nav-btn" data-page="integrations">🔌 Integrasjoner</button>
+      <button class="mv-nav-btn" data-page="settings">⚙️ Innstillinger</button>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="mv-main" id="mvMain">
 
 <!-- BEATS -->
 <section id="beatsTab" class="tab-view hidden">
@@ -588,16 +608,54 @@ AKTIVE BRUKERE:
   <script>window.R2_WORKER_URL = 'https://beat-vault.marcus-aas-mekiassen.workers.dev';</script>
 
   <!-- App scripts (load order matters) -->
-  <script src="js/audio-compress.js?v=202605141253"></script>
-  <script src="js/lock.js?v=202605141253"></script>
-  <script src="js/db.js?v=202605141253"></script>
-  <script src="js/app.js?v=202605141253"></script>
-  <script src="js/track-cards.js?v=202605141253"></script>
-  <script src="js/r2-storage.js?v=202605141253"></script>
-  <script src="js/archive.js?v=202605141253"></script>
-  <script src="js/mixtape.js?v=202605141253"></script>
-  <script src="js/changelog.js?v=202605141253"></script>
-  <script src="js/beats-tab.js?v=202605141253"></script>
-  <script src="js/supabase.js?v=202605141253"></script>
+  <script src="js/audio-compress.js?v=202605141357"></script>
+  <script src="js/nav.js?v=202605141357"></script>
+  <script src="js/lock.js?v=202605141357"></script>
+  <script src="js/db.js?v=202605141357"></script>
+  <script src="js/app.js?v=202605141357"></script>
+  <script src="js/track-cards.js?v=202605141357"></script>
+  <script src="js/r2-storage.js?v=202605141357"></script>
+  <script src="js/archive.js?v=202605141357"></script>
+  <script src="js/mixtape.js?v=202605141357"></script>
+  <script src="js/changelog.js?v=202605141357"></script>
+  <script src="js/beats-tab.js?v=202605141357"></script>
+  <script src="js/supabase.js?v=202605141357"></script>
+
+    <!-- OVERVIEW TAB -->
+    <section id="overviewTab" class="tab-view hidden">
+      <div id="overviewContent"></div>
+    </section>
+
+    <!-- LYRIC LAB PLACEHOLDER -->
+    <section id="lyriclabTab" class="tab-view hidden">
+      <div class="mv-placeholder">
+        <div class="mv-placeholder-icon">✍️</div>
+        <h2>Lyric Lab</h2>
+        <p>Skriv, strukturer og lagre tekster per sang. Kobles til beats og mixtapes.</p>
+        <span class="mv-placeholder-badge">Kommer snart</span>
+      </div>
+    </section>
+
+    <!-- IDÉBANK PLACEHOLDER -->
+    <section id="ideabankTab" class="tab-view hidden">
+      <div class="mv-placeholder">
+        <div class="mv-placeholder-icon">💡</div>
+        <h2>Idébank</h2>
+        <p>Fang ideer raskt — hooks, titler, samples, referanser. Søkbart og taggbart.</p>
+        <span class="mv-placeholder-badge">Kommer snart</span>
+      </div>
+    </section>
+
+    <!-- SETTINGS PLACEHOLDER -->
+    <section id="settingsTab" class="tab-view hidden">
+      <div class="mv-placeholder">
+        <div class="mv-placeholder-icon">⚙️</div>
+        <h2>Innstillinger</h2>
+        <p>Brukerprofil, temavalg og app-preferanser.</p>
+        <span class="mv-placeholder-badge">Kommer snart</span>
+      </div>
+    </section>
+  </main><!-- /.mv-main -->
+</div><!-- /.mv-app-shell -->
 </body>
 </html>
