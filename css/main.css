@@ -902,3 +902,11 @@ body.admin-mode .admin-only-btn { display: inline-flex !important; }
   color: var(--muted);
   margin-top: 2px;
 }
+
+/* Inside sidebar layout, remove redundant .app top padding */
+.mv-main .app {
+  padding: 0;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+}
